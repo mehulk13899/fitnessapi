@@ -1,0 +1,34 @@
+{
+	"user": {
+		"profile": {
+			"photo": "",
+			"name": "",
+			"gender": "male,female",
+			"height": "",
+			"weight": "",
+			"target weight": "",
+			"date of birth": "",
+			"fat percentage": "",
+			"food preference": "Non-Vegetarian,vegetarian,vegan,jain,eggatarian",
+			"fitness level": "beginner,intermidiate,professional",
+			"bio": ""
+		},
+		"Contact info": {
+			"email": "",
+			"email_verified": "true",
+			"Country": "",
+			"code": "",
+			"mobile number": "",
+			"mobile_verified": "true"
+		},
+		"social": {
+			"Facebook Link": "",
+			"Instagram Link": "",
+			"Twitter Link": "",
+			"Linkedin Link": ""
+		},
+		"interested in": "trekking,crafts,material arts,power lifting,yoga,meditation,zumba,cycling,running"
+	}
+}	 
+
+reference from User Edit Profile - Fitter Application 
