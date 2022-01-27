@@ -33,7 +33,7 @@ export class AuthController {
       req?.user?.payload?.id,
     );
   }
-  @Get('me')
+  @Get('aboutuser')
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   me(@Req() req) {
@@ -50,8 +50,8 @@ export class AuthController {
   ) {
     return this.authService.verifyForgetPasswordToken(verifyForgetPasswordDto);
   }
-  @Post('forget-password')
-  resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
-    return this.authService.resetPassword(resetPasswordDto);
-  }
+  // @Post('forget-password')
+  // resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+  //   return this.authService.resetPassword(resetPasswordDto);
+  // }
 }

@@ -16,7 +16,8 @@ export class ForgetPasswordDto {
 }
 export class VerifyForgetPasswordDto {
   email: string;
-  token: string;
+  otp: string;
+  password: string;
 }
 export class ResetPasswordDto {
   email: string;

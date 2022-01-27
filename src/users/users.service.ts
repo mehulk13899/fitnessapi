@@ -1,11 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
-import {  UserT } from './entities/user.entity';
+import { UserT } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getRepository, Repository } from 'typeorm';
-import { ProfileSchema, UserSocialSchema,ContactInfoSchema } from './entities/profile.entity';
+import {
+  ProfileSchema,
+  UserSocialSchema,
+  ContactInfoSchema,
+} from './entities/profile.entity';
 
 @Injectable()
 export class UsersService {
@@ -127,14 +131,14 @@ export class UsersService {
     if (user) {
       await this.userRepository.remove(user);
       return {
+        statusCode: 200,
         message: 'User deleted',
-        success: true,
       };
     } else {
-      return {
+      throw new BadRequestException({
+        statusCode: 400,
         message: 'User not found',
-        success: false,
-      };
+      });
     }
   }
   async activeUser(id: number) {
@@ -142,14 +146,14 @@ export class UsersService {
     if (user) {
       await this.userRepository.update(id, { status: true });
       return {
+        statusCode: 200,
         message: 'User activated',
-        success: true,
       };
     } else {
-      return {
+      throw new BadRequestException({
+        statusCode: 400,
         message: 'User not found',
-        success: false,
-      };
+      });
     }
   }
   async deactiveUser(id: number) {
@@ -157,25 +161,30 @@ export class UsersService {
     if (user) {
       await this.userRepository.update(id, { status: false });
       return {
+        statusCode: 200,
         message: 'User deactivated',
-        success: true,
       };
     } else {
-      return {
+      throw new BadRequestException({
+        statusCode: 400,
         message: 'User not found',
-        success: false,
-      };
+      });
     }
   }
   async findOne(id: number) {
     const user = await this.userRepository.findOne(id);
     if (user) {
-      return user;
-    } else {
       return {
-        message: 'User not found',
-        success: false,
+        statusCode: 200,
+        message: 'User found',
+        user,
       };
+    } else {
+      throw new BadRequestException({
+        statusCode: 400,
+        message: 'User not found',
+        user: '',
+      });
     }
   }
 }

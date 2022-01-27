@@ -33,26 +33,31 @@ export class AuthService {
     private jwtService: JwtService,
     @Inject(CACHE_MANAGER)
     private cacheManager: Cache,
-    private userService: UsersService
+    private userService: UsersService,
   ) {}
   async register(createUserInput: RegisterDto) {
     createUserInput.password = encrypt(createUserInput.password);
     try {
-       const userGEt = await this.userRepository.findOne({
-         email: createUserInput.email,
-       });
-       if (userGEt) {
-         return {
-           message: 'User already exist',
-           success: false,
-         };
-       }  
+      const userGEt = await this.userRepository.findOne({
+        email: createUserInput.email,
+      });
+      if (userGEt) {
+        throw new BadRequestException({
+          statusCode: 400,
+          message: 'User already exist',
+          token: '',
+          user: '',
+        });
+      }
       const user = await this.userService.create(createUserInput);
       const { id } = user;
       const payload = { id };
       const asscesstoken = this.jwtService.sign({ payload });
       return {
+        statusCode: 200,
         token: asscesstoken,
+        message: 'User Created successfully',
+        user,
       };
     } catch (error) {
       return error;
@@ -69,25 +74,42 @@ export class AuthService {
           const payload = { id };
           const asscesstoken = this.jwtService.sign({ payload });
           return {
+            statusCode: 200,
+            message: 'Login Successfully',
             token: asscesstoken,
+            user,
           };
         } else {
-          throw new UnauthorizedException('Enter Valid Password.');
+          throw new UnauthorizedException({
+            statusCode: 401,
+            message: 'Enter Valid Password.',
+            token: '',
+            user: '',
+          });
         }
       } else {
-         throw new BadRequestException('User is Not Active');
+        throw new BadRequestException({
+          statusCode: 401,
+          message: 'User is not active.',
+          token: '',
+          user: '',
+        });
       }
-      
     } else {
-      throw new NotFoundException('User Not found');
+      throw new NotFoundException({
+        statusCode: 404,
+        message: 'User Not found.',
+        token: '',
+        user: '',
+      });
     }
   }
-  async changePassword(
-    changePasswordInput: ChangePasswordDto,
-    id: number,
-  ){
+  async changePassword(changePasswordInput: ChangePasswordDto, id: number) {
     if (changePasswordInput.newPassword == changePasswordInput.oldPassword) {
-      throw new BadRequestException('Please Enter Diffrent Password');
+      throw new BadRequestException({
+        statusCode: 400,
+        message: 'Please Enter Diffrent Password',
+      });
     }
     if (id) {
       const user = await this.userRepository.findOne({ id });
@@ -97,14 +119,20 @@ export class AuthService {
           user.password = passwordnew;
           await this.userRepository.save(user);
           return {
-            success: true,
+            statusCode: 200,
             message: 'Password change successful',
           };
         } else {
-          throw new UnauthorizedException('Enter Valid Old Password.');
+          throw new UnauthorizedException({
+            statusCode: 401,
+            message: 'Enter Valid Old Password.',
+          });
         }
       } else {
-        throw new NotFoundException('User Not found');
+        throw new NotFoundException({
+          statusCode: 404,
+          message: 'User Not found',
+        });
       }
     }
   }
@@ -115,11 +143,12 @@ export class AuthService {
     if (user) {
       await this.changePasswordGenerateOTP(forgetPasswordInput); //send email
       return {
-        success: true,
+        statusCode: 200,
+        message: 'Mail Send Successfully',
       };
     } else {
       return {
-        success: false,
+        statusCode: 404,
         message: 'User not found',
       };
     }
@@ -130,11 +159,19 @@ export class AuthService {
     const user = await this.userRepository.findOne({
       email: verifyForgetPasswordTokenInput.email,
     });
-    return this.changePasswordCompareOTP(verifyForgetPasswordTokenInput, user);
+    if (user) {
+      return this.changePasswordCompareOTP(
+        verifyForgetPasswordTokenInput,
+        user,
+      );
+    } else {
+      return {
+        statusCode: 404,
+        message: 'User not found',
+      };
+    }
   }
-  async resetPassword(
-    resetPasswordInput: ResetPasswordDto,
-  ) {
+  async resetPassword(resetPasswordInput: ResetPasswordDto) {
     const user = await this.userRepository.findOne({
       email: resetPasswordInput.email,
     });
@@ -143,11 +180,14 @@ export class AuthService {
       user.password = passwordnew;
       await this.userRepository.save(user);
       return {
-        success: true,
+        statusCode: 200,
         message: 'Password change successful',
       };
     } else {
-      throw new NotFoundException('User Not found');
+      throw new NotFoundException({
+        statusCode: 404,
+        message: 'User not found',
+      });
     }
   }
 
@@ -173,7 +213,10 @@ export class AuthService {
       email: email,
     });
     if (!user) {
-      throw new NotFoundException('User Not Found');
+      throw new NotFoundException({
+        statusCode: 404,
+        message: 'User not found',
+      });
     }
     const otp: number = this.generateOTP();
     const mailTrigger = new MailTrigger({
@@ -183,35 +226,36 @@ export class AuthService {
     });
     const info: SMTPTransport.SentMessageInfo = await mailTrigger.sendMail();
     await this.setCache(user.email, otp);
-    return this.changePasswordToken(email);
   }
-
-  changePasswordToken(email: string) {
-    const payload = {
-      sub: email,
-    };
-    return { email: email, token: this.jwtService.sign({ payload }) };
-  }
-
   async changePasswordCompareOTP(otpDto: VerifyForgetPasswordDto, user) {
-    const { token } = otpDto;
+    const { otp } = otpDto;
     const cacheValue: any = await this.getCache(user.email);
     console.log(cacheValue);
-    console.log(token);
     if (!cacheValue) {
-      return {
-        success: false,
+      throw new NotFoundException({
+        statusCode: 400,
         message: 'OTP Expired',
-      };
-    } else if (+cacheValue !== +token) {
-      return {
-        success: false,
+      });
+    } else if (+cacheValue !== +otp) {
+      throw new NotFoundException({
+        statusCode: 400,
         message: "OTP doesn't match.",
-      };
+      });
     } else {
-      return {
-        success: true,
-      };
+      if (user) {
+        const passwordnew = encrypt(otpDto.password);
+        user.password = passwordnew;
+        await this.userRepository.save(user);
+        return {
+          statusCode: 200,
+          message: 'Password change successful',
+        };
+      } else {
+        throw new NotFoundException({
+          statusCode: 404,
+          message: 'User not found',
+        });
+      }
     }
   }
 }

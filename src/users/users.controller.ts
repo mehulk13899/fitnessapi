@@ -8,11 +8,10 @@ import {
   Delete,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 
-@Controller('users')
+@Controller()
 @ApiTags('User')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -22,31 +21,31 @@ export class UsersController {
   //   return this.usersService.create(createUserDto);
   // }
 
-  @Get()
+  @Get('getAllUser')
   getAllUsers() {
     return this.usersService.getUsers();
   }
 
-  @Get(':id')
+  @Get('getUserById/:id')
   getUser(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
 
-  @Put(':id')
+  @Put('updateuserprofile/:id')
   updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
-  @Delete(':id')
+  @Delete('deleteUser/:id')
   removeUser(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
 
-  @Post(':id/active')
+  @Post('activeUser/:id')
   activeUser(@Param('id') id: number) {
     return this.usersService.activeUser(id);
   }
-  @Post(':id/deactive')
+  @Post('deactiveUser/:id')
   deactiveUser(@Param('id') id: number) {
     return this.usersService.deactiveUser(id);
   }
