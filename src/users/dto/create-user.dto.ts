@@ -11,21 +11,23 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @ApiProperty()
-  @IsDefined()
+  @ApiPropertyOptional()
   @IsString()
-  @IsNotEmpty()
-  password: string;
-  
+  password?: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  loginfrom?: string;
+
   @ApiPropertyOptional()
   profile?: ProfileEntity;
-  
+
   @ApiPropertyOptional()
   social?: UserSocialEntity;
-  
+
   @ApiPropertyOptional()
   interested_in?: InterestedIN;
-  
+
   @ApiPropertyOptional()
   contact_info?: ContactInfoEntity;
 }

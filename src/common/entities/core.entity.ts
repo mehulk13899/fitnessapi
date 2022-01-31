@@ -14,7 +14,7 @@ export class CoreEntityT {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: new Date() })
+  @Column({ default: new Date().toLocaleString().split(',')[0] })
   created_at: Date;
 
   @Column({

@@ -1,11 +1,14 @@
 import { CoreEntity, CoreEntityT } from 'src/common/entities/core.entity';
+import { FoodSchema } from 'src/foods/entities/food.entity';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-} from 'typeorm';
-import { ContactInfoEntity, ContactInfoSchema, ProfileEntity, ProfileSchema, UserSocialEntity, UserSocialSchema } from './profile.entity';
+  ContactInfoEntity,
+  ContactInfoSchema,
+  ProfileEntity,
+  ProfileSchema,
+  UserSocialEntity,
+  UserSocialSchema,
+} from './profile.entity';
 
 export enum InterestedIN {
   trekking = 'trekking',
@@ -49,6 +52,9 @@ export class UserT extends CoreEntityT {
   @Column({})
   password: string;
 
+  @Column({ nullable: true })
+  loginfrom: string;
+
   @OneToOne(() => ProfileSchema, (profilet: ProfileSchema) => profilet.user, {
     eager: true,
     onDelete: 'CASCADE',
@@ -76,4 +82,10 @@ export class UserT extends CoreEntityT {
   )
   @JoinColumn()
   contact_info: ContactInfoSchema;
+
+  @OneToMany(() => FoodSchema, (food) => food.user, {
+    eager: true,
+    nullable: true,
+  })
+  foods: FoodSchema[];
 }

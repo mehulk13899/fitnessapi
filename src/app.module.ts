@@ -3,6 +3,8 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { FoodsModule } from './foods/foods.module';
+import { WorkoutModule } from './workout/workout.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { ConfigModule } from '@nestjs/config';
       synchronize:process.env.SYNCHRONIZE?true:false,
       autoLoadEntities: process.env.SYNCHRONIZE?true:false,
     }),
+    FoodsModule,
+    WorkoutModule,
   ],
   controllers: [],
   providers: [],
