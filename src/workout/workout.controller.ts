@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { WorkoutService } from './workout.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { categoryType } from './entities/workout.entity';
 
-@ApiTags('WorkOut')
+@ApiTags('WorkOut & Exercises')
 @Controller('workout')
 export class WorkoutController {
   constructor(private readonly workoutService: WorkoutService) {}
@@ -25,9 +27,12 @@ export class WorkoutController {
     return this.workoutService.createWorkoutTable();
   }
 
-  @Post('getWorkoutById/:id')
-  getWorkoutById(@Param('id') id: string) {
-    return this.workoutService.getWorkoutById(id);
+  @Get('GetworkoutbyCategoryId')
+  @ApiQuery({ name: 'category', enum: categoryType })
+  getWorkoutById(
+    @Query('category') category: categoryType = categoryType.cardio,
+  ) {
+    return this.workoutService.getWorkoutById(category);
   }
 
   @Get('getAllexercises')
@@ -35,18 +40,13 @@ export class WorkoutController {
     return this.workoutService.findAll();
   }
 
-  @Get('getexercisesById/:id')
-  findOne(@Param('id') id: string) {
-    return this.workoutService.findOne(id);
+  @Get('getAllworkouts')
+  findAllworkout() {
+    return this.workoutService.findAllworkout();
   }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateWorkoutDto: UpdateWorkoutDto) {
-  //   return this.workoutService.update(+id, updateWorkoutDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.workoutService.remove(+id);
+  // @Get('GetworkoutbyCategoryId')
+  // @ApiQuery({ name: 'category', enum: categoryType })
+  // findOne(@Query('category') category: categoryType = categoryType.cardio) {
+  //   return this.workoutService.findOne(category);
   // }
 }

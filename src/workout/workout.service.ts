@@ -7,6 +7,7 @@ import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
+  categoryType,
   ExercisesSchema,
   WorkoutModel,
   WorkoutSchema,
@@ -49,7 +50,9 @@ export class WorkoutService {
     };
   }
   async getWorkoutById(id: string) {
-    const data = await this.workoutRepository.findOne({ id: +id });
+    const data = await this.workoutRepository.find({
+      category: categoryType[`${id}`],
+    });
     if (!data) {
       {
         throw new NotFoundException({
@@ -63,6 +66,9 @@ export class WorkoutService {
   }
   async findAll() {
     return this.exercisesRepository.find();
+  }
+  async findAllworkout() {
+    return this.workoutRepository.find();
   }
   async getAllData() {
     let workOutData: ExerciseList[] = [];

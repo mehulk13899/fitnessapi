@@ -12,11 +12,9 @@ export class CreateUserDto {
   email: string;
 
   @ApiPropertyOptional()
-  @IsString()
   password?: string;
 
   @ApiPropertyOptional()
-  @IsString()
   loginfrom?: string;
 
   @ApiPropertyOptional()

@@ -36,7 +36,8 @@ export class AuthService {
     private userService: UsersService,
   ) {}
   async register(createUserInput: RegisterDto) {
-    createUserInput.password = encrypt(createUserInput.password);
+    if (createUserInput?.password)
+      createUserInput.password = encrypt(createUserInput.password);
     try {
       const userGEt = await this.userRepository.findOne({
         email: createUserInput.email,
@@ -69,24 +70,34 @@ export class AuthService {
     });
     if (user) {
       if (user.status) {
-        if (decrypt(user.password) == loginInput.password) {
-          const { id } = user;
-          const payload = { id };
-          const asscesstoken = this.jwtService.sign({ payload });
-          return {
-            statusCode: 200,
-            message: 'Login Successfully',
-            token: asscesstoken,
-            user,
-          };
-        } else {
-          throw new UnauthorizedException({
-            statusCode: 401,
-            message: 'Enter Valid Password.',
-            token: '',
-            user: '',
-          });
+        if (loginInput?.loginfrom == 'local') {
+          if (decrypt(user.password) == loginInput.password) {
+            const { id } = user;
+            const payload = { id };
+            const asscesstoken = this.jwtService.sign({ payload });
+            return {
+              statusCode: 200,
+              message: 'Login Successfully',
+              token: asscesstoken,
+              user,
+            };
+          } else {
+            throw new UnauthorizedException({
+              statusCode: 401,
+              message: 'Enter Valid Password.',
+              token: '',
+              user: '',
+            });
+          }
         }
+        else
+        { 
+           return {
+             statusCode: 200,
+             message: 'Login Successfully using Social Login',
+             user,
+           };
+          }
       } else {
         throw new BadRequestException({
           statusCode: 401,

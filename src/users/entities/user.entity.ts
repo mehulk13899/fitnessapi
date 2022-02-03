@@ -49,7 +49,7 @@ export class UserT extends CoreEntityT {
   @Column({})
   email: string;
 
-  @Column({})
+  @Column({ nullable: true })
   password: string;
 
   @Column({ nullable: true })

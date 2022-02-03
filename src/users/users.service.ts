@@ -73,6 +73,7 @@ export class UsersService {
   }
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.userRepository.findOne(id);
+    user.loginfrom = updateUserDto?.loginfrom;
     if (user['profile'] == undefined || user['profile'] == null) {
       if (updateUserDto?.profile) {
         const profile = await this.profileRepositry.save({
