@@ -15,17 +15,27 @@ import { ApiTags } from '@nestjs/swagger';
 export class WorkoutController {
   constructor(private readonly workoutService: WorkoutService) {}
 
-  @Post('createWorkoutTable')
+  @Post('createxercisesTable')
   create() {
     return this.workoutService.create();
   }
 
-  @Get('getAllWorkout')
+  @Post('createWorkoutTable')
+  createWorkoutTable() {
+    return this.workoutService.createWorkoutTable();
+  }
+
+  @Post('getWorkoutById/:id')
+  getWorkoutById(@Param('id') id: string) {
+    return this.workoutService.getWorkoutById(id);
+  }
+
+  @Get('getAllexercises')
   findAll() {
     return this.workoutService.findAll();
   }
 
-  @Get('getWorkoutById/:id')
+  @Get('getexercisesById/:id')
   findOne(@Param('id') id: string) {
     return this.workoutService.findOne(id);
   }

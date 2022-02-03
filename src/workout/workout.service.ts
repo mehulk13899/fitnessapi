@@ -1,14 +1,19 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateWorkoutDto } from './dto/create-workout.dto';
-import { UpdateWorkoutDto } from './dto/update-workout.dto';
 import { ExerciseList, ExercisModel } from './models/exerciselist.models';
 import { Logger } from '@nestjs/common';
 import { map } from 'rxjs';
-import { v4 as uuidv4 } from 'uuid';
+import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { WorkoutSchema } from './entities/workout.entity';
+import {
+  ExercisesSchema,
+  WorkoutModel,
+  WorkoutSchema,
+} from './entities/workout.entity';
+import workoutJson from './../../exercises.json';
+
+const workout = plainToClass(WorkoutModel, workoutJson.exercises);
 @Injectable()
 export class WorkoutService {
   private WORKOUT_BASEURL: string =
@@ -16,25 +21,48 @@ export class WorkoutService {
 
   constructor(
     private readonly httpService: HttpService,
-    @InjectRepository(WorkoutSchema) private workOut: Repository<WorkoutSchema>,
+    @InjectRepository(ExercisesSchema)
+    private exercisesRepository: Repository<ExercisesSchema>,
+    @InjectRepository(WorkoutSchema)
+    private workoutRepository: Repository<WorkoutSchema>,
   ) {}
 
   async create() {
     let workouts: ExerciseList[] = await this.getAllData();
-    console.log(workouts);
     workouts.map(async (workout) => {
-      const data = await this.workOut.findOne({ id: workout?.id });
+      const data = await this.exercisesRepository.findOne({ id: workout?.id });
       if (!data) {
         workout.description = workout?.description?.replace(
           /<\/?[^>]+(>|$)/g,
           '',
         );
-        await this.workOut.save({ ...workout });
+        await this.exercisesRepository.save({ ...workout });
       }
     });
   }
+  async createWorkoutTable() {
+    workout.map(async (work) => {
+      await this.workoutRepository.save({ ...work });
+    });
+    return {
+      message: 'succses',
+    };
+  }
+  async getWorkoutById(id: string) {
+    const data = await this.workoutRepository.findOne({ id: +id });
+    if (!data) {
+      {
+        throw new NotFoundException({
+          statusCode: 404,
+          message: 'workout not found',
+          data: '',
+        });
+      }
+    }
+    return { data: data };
+  }
   async findAll() {
-    return this.workOut.find();
+    return this.exercisesRepository.find();
   }
   async getAllData() {
     let workOutData: ExerciseList[] = [];
@@ -55,27 +83,17 @@ export class WorkoutService {
     return workOutData;
   }
   async findOne(id: string) {
-    const data = await this.workOut.findOne({ id: id });
+    const data = await this.exercisesRepository.findOne({ id: id });
+    console.log(data);
     if (!data) {
       {
         throw new NotFoundException({
           statusCode: 404,
-          message: 'WorkOut not found',
+          message: 'exercises not found',
           data: '',
         });
       }
     }
     return { data: data };
-  }
-
-  update(id: number, updateWorkoutDto: UpdateWorkoutDto) {
-    return `This action updates a #${id} workout`;
-  }
-
-  remove(id: number) {
-    var htmlString = "<div><h1>Hello World</h1>\n<p>It's me, Mario</p></div>";
-    var txt = htmlString.replace(/<\/?[^>]+(>|$)/g, '');
-    console.log(txt);
-    return `This action removes a #${id} workout`;
   }
 }

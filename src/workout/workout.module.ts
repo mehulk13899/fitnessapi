@@ -3,11 +3,11 @@ import { WorkoutService } from './workout.service';
 import { WorkoutController } from './workout.controller';
 import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { WorkoutSchema } from './entities/workout.entity';
+import { ExercisesSchema, WorkoutSchema } from './entities/workout.entity';
 @Module({
   imports: [
     forwardRef(() => HttpModule),
-    TypeOrmModule.forFeature([WorkoutSchema]),
+    TypeOrmModule.forFeature([ExercisesSchema, WorkoutSchema]),
   ],
   controllers: [WorkoutController],
   providers: [WorkoutService],
