@@ -12,15 +12,22 @@ export enum FoodPreference {
   vegan = 'vegan',
   jain = 'jain',
   eggatarian = 'eggatarian',
+  null = '',
+
 }
 export enum FitnessLevel {
   beginner = 'beginner',
   intermidiate = 'intermidiate',
   professional = 'professional',
+  null = '',
+
 }
 export enum Gender {
   male = 'male',
+  Male = 'Male',
+  null = '',
   female = 'female',
+  Female = 'Female',
 }
 export class ProfileEntity  {
   photo?: string;

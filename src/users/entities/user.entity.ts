@@ -20,6 +20,7 @@ export enum InterestedIN {
   zumba = 'zumba',
   cycling = 'cycling',
   running = 'running',
+  null = '',
 }
 
 export class User extends CoreEntity {

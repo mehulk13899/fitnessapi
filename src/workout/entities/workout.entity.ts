@@ -69,20 +69,28 @@ export enum muscle {
   forearms = 'forearms',
   neck = 'neck',
   abductors = 'abductors',
+  null = '',
+
 }
 export enum forceType {
   pulls = 'pull',
   push = 'push',
   static = 'static',
+  null = '',
+
 }
 export enum levelType {
   beginner = 'beginner',
   intermediate = 'intermediate',
   expert = 'expert',
+  null = '',
+
 }
 export enum mechanicType {
   compound = 'compound',
   isolation = 'isolation',
+  null = '',
+
 }
 export enum equipmentType {
   bodyonly = 'body only',
@@ -97,6 +105,8 @@ export enum equipmentType {
   bands = 'bands',
   exerciseball = 'exercise ball',
   curlbar = 'e-z curl bar',
+  null = '',
+
 }
 export enum categoryType {
   strength = 'strength',
@@ -106,6 +116,8 @@ export enum categoryType {
   powerlifting = 'powerlifting',
   cardio = 'cardio',
   olympic_weightlifting = 'olympic weightlifting',
+  null = '',
+
 }
 export class WorkoutModel {
   name: string;

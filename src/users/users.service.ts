@@ -37,7 +37,10 @@ export class UsersService {
       user_social.twitter_link = createUserDto.social.twitter_link;
       user_social.instagram_link = createUserDto.social.instagram_link;
       user_social.linkedin_link = createUserDto.social.linkedin_link;
-      await this.userSocialRepositry.save(user_social);
+      await this.userSocialRepositry.save(user_social).catch((err) => {
+      console.log(err);
+      return err;
+    });;
     }
     if (createUserDto?.contact_info) {
       const contact_info = new ContactInfoSchema();
@@ -46,7 +49,10 @@ export class UsersService {
       contact_info.code = createUserDto.contact_info.code;
       contact_info.country = createUserDto.contact_info.country;
       contact_info.mobile_number = createUserDto.contact_info.mobile_number;
-      await this.contactInfoRepositry.save(contact_info);
+      await this.contactInfoRepositry.save(contact_info).catch((err) => {
+      console.log(err);
+      return err;
+    });;
     }
 
     if (createUserDto?.profile) {
@@ -63,7 +69,10 @@ export class UsersService {
       profile.gender = createUserDto?.profile?.gender;
       profile.target_weight = createUserDto?.profile?.target_weight;
       profile.date_of_birth = createUserDto?.profile?.date_of_birth;
-      await this.profileRepositry.save(profile);
+      await this.profileRepositry.save(profile).catch((err) => {
+      console.log(err);
+      return err;
+    });;
     }
     return user;
   }
