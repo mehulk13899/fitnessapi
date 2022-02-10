@@ -5,14 +5,14 @@ import { Logger } from '@nestjs/common';
 import { map } from 'rxjs';
 import { plainToClass } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import {
   categoryType,
-  ExercisesSchema,
   WorkoutModel,
   WorkoutSchema,
 } from './entities/workout.entity';
 import workoutJson from './../../exercises.json';
+import { GetExercisesDto } from './dto/create-workout.dto';
 
 const workout = plainToClass(WorkoutModel, workoutJson.exercises);
 @Injectable()
@@ -22,8 +22,6 @@ export class WorkoutService {
 
   constructor(
     private readonly httpService: HttpService,
-    @InjectRepository(ExercisesSchema)
-    private exercisesRepository: Repository<ExercisesSchema>,
     @InjectRepository(WorkoutSchema)
     private workoutRepository: Repository<WorkoutSchema>,
   ) {}
@@ -31,17 +29,19 @@ export class WorkoutService {
   async create() {
     let workouts: ExerciseList[] = await this.getAllData();
     workouts.map(async (workout) => {
-      const data = await this.exercisesRepository.findOne({ id: workout?.id });
+      const data = await this.workoutRepository.findOne({ id: +workout.id });
       if (!data) {
         workout.description = workout?.description?.replace(
           /<\/?[^>]+(>|$)/g,
           '',
         );
-        await this.exercisesRepository.save({ ...workout });
+        if (workout['equipment']) {
+          var equipment_api = workout['equipment']
+          delete workout['equipment'];
+        }
+        await this.workoutRepository.save({ ...workout, equipment_api });
       }
     });
-  }
-  async createWorkoutTable() {
     workout.map(async (work) => {
       await this.workoutRepository.save({ ...work });
     });
@@ -49,6 +49,7 @@ export class WorkoutService {
       message: 'succses',
     };
   }
+
   async getWorkoutById(id: string) {
     const data = await this.workoutRepository.find({
       category: categoryType[`${id}`],
@@ -64,11 +65,13 @@ export class WorkoutService {
     }
     return { data: data };
   }
-  async findAll() {
-    return this.exercisesRepository.find();
-  }
-  async findAllworkout() {
-    return this.workoutRepository.find();
+  async findAllworkout(query: GetExercisesDto) {
+    return this.workoutRepository.find({
+      take: query?.limit,
+      where: [{
+        category: Like(`%${query?.category}%`),
+      }]
+    });
   }
   async getAllData() {
     let workOutData: ExerciseList[] = [];
@@ -88,18 +91,5 @@ export class WorkoutService {
       });
     return workOutData;
   }
-  async findOne(id: string) {
-    const data = await this.exercisesRepository.findOne({ id: id });
-    console.log(data);
-    if (!data) {
-      {
-        throw new NotFoundException({
-          statusCode: 404,
-          message: 'exercises not found',
-          data: '',
-        });
-      }
-    }
-    return { data: data };
-  }
+
 }

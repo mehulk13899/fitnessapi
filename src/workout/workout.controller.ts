@@ -11,23 +11,19 @@ import {
 import { WorkoutService } from './workout.service';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { categoryType } from './entities/workout.entity';
+import { GetExercisesDto } from './dto/create-workout.dto';
 
 @ApiTags('WorkOut & Exercises')
 @Controller('workout')
 export class WorkoutController {
   constructor(private readonly workoutService: WorkoutService) {}
 
-  @Post('createxercisesTable')
+  @Post('create_exercises_table')
   create() {
     return this.workoutService.create();
   }
 
-  @Post('createWorkoutTable')
-  createWorkoutTable() {
-    return this.workoutService.createWorkoutTable();
-  }
-
-  @Get('GetworkoutbyCategoryId')
+  @Get('get_exercises_by_categoryid')
   @ApiQuery({ name: 'category', enum: categoryType })
   getWorkoutById(
     @Query('category') category: categoryType = categoryType.cardio,
@@ -35,14 +31,9 @@ export class WorkoutController {
     return this.workoutService.getWorkoutById(category);
   }
 
-  @Get('getAllexercises')
-  findAll() {
-    return this.workoutService.findAll();
-  }
-
-  @Get('getAllworkouts')
-  findAllworkout() {
-    return this.workoutService.findAllworkout();
+  @Get('get_all_exercises')
+  findAllworkout(@Query() query: GetExercisesDto) {
+    return this.workoutService.findAllworkout(query);
   }
   // @Get('GetworkoutbyCategoryId')
   // @ApiQuery({ name: 'category', enum: categoryType })

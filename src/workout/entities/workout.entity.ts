@@ -1,55 +1,6 @@
 import { CoreEntity, CoreEntityT } from 'src/common/entities/core.entity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-@Entity('exercises')
-export class ExercisesSchema {
-  @PrimaryGeneratedColumn()
-  auto_id: number;
 
-  @Column({ nullable: true })
-  id: string;
-
-  @Column({ nullable: true })
-  uuid: string;
-
-  @Column({ nullable: true })
-  name: string;
-
-  @Column({ nullable: true })
-  exercise_base: number;
-
-  @Column({ nullable: true })
-  status: string;
-
-  @Column({ nullable: true })
-  description: string;
-
-  @Column({ nullable: true })
-  creation_date: string;
-
-  @Column({ nullable: true })
-  category: string;
-
-  @Column({ nullable: true })
-  muscles: string;
-
-  @Column({ nullable: true })
-  muscles_secondary: string;
-
-  @Column({ nullable: true })
-  language: number;
-
-  @Column({ nullable: true })
-  license: number;
-
-  @Column({ nullable: true })
-  license_author: string;
-
-  @Column('simple-array')
-  equipment: number[];
-
-  @Column('simple-array')
-  variations: number[];
-}
 
 export enum muscle {
   abdominals = 'abdominals',
@@ -120,19 +71,31 @@ export enum categoryType {
 
 }
 export class WorkoutModel {
-  name: string;
-  description: string;
-  aliases: string[];
-  instructions: string[];
-  tips: string[];
-  primary_muscles: muscle[];
-  secondary_muscles: muscle[];
-  force: forceType;
-  level: levelType;
-  mechanic: mechanicType;
-  equipment: equipmentType;
-  category: categoryType;
+  name?: string;
+  description?: string;
+  aliases?: string[];
+  instructions?: string[];
+  tips?: string[];
+  primary_muscles?: muscle[];
+  secondary_muscles?: muscle[];
+  force?: forceType;
+  level?: levelType;
+  mechanic?: mechanicType;
+  equipment?: equipmentType;
+  category?: string;
+  uuid?: string;
+  exercise_base?: number;
+  status?: string;
+  creation_date?: string;
+  muscles?: string;
+  muscles_secondary?: string;
+  equipment_api?: number[];
+  language?: number;
+  license?: number;
+  license_author?: string;
+  variations?: any[];
 }
+
 @Entity('workout')
 export class WorkoutSchema extends CoreEntityT {
   @Column({})
@@ -156,6 +119,45 @@ export class WorkoutSchema extends CoreEntityT {
   @Column('simple-array', { nullable: true })
   secondaryMuscles: string[];
 
+
+  @Column({ nullable: true })
+  uuid: string;
+
+
+  @Column({ nullable: true })
+  exercise_base: number;
+
+  @Column({ nullable: true })
+  status: string;
+
+
+  @Column({ nullable: true })
+  creation_date: string;
+
+  @Column({ nullable: true })
+  category: string;
+
+  @Column({ nullable: true })
+  muscles: string;
+
+  @Column({ nullable: true })
+  muscles_secondary: string;
+
+  @Column({ nullable: true })
+  language: number;
+
+  @Column({ nullable: true })
+  license: number;
+
+  @Column({ nullable: true })
+  license_author: string;
+
+  @Column('simple-array', { nullable: true })
+  equipment_api: number[];
+
+  @Column('simple-array', { nullable: true })
+  variations: number[];
+
   @Column({
     type: 'enum',
     enum: forceType,
@@ -174,16 +176,12 @@ export class WorkoutSchema extends CoreEntityT {
     nullable: true,
   })
   mechanic: mechanicType;
+
   @Column({
     type: 'enum',
     enum: equipmentType,
     nullable: true,
   })
   equipment: equipmentType;
-  @Column({
-    type: 'enum',
-    enum: categoryType,
-    nullable: true,
-  })
-  category: categoryType;
+
 }

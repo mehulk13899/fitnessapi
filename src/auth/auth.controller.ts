@@ -37,6 +37,7 @@ export class AuthController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   me(@Req() req) {
+    console.log(req);
     const id = req?.user?.payload?.id || 1;
     return this.authService.me(id);
   }
