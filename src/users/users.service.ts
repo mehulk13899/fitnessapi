@@ -148,7 +148,7 @@ export class UsersService {
       throw new BadRequestException({
         statusCode: 400,
         message: 'User not found',
-      });
+      }).getResponse();
     }
   }
   async activeUser(id: number) {
@@ -163,7 +163,7 @@ export class UsersService {
       throw new BadRequestException({
         statusCode: 400,
         message: 'User not found',
-      });
+      }).getResponse();
     }
   }
   async deactiveUser(id: number) {
@@ -178,7 +178,7 @@ export class UsersService {
       throw new BadRequestException({
         statusCode: 400,
         message: 'User not found',
-      });
+      }).getResponse();
     }
   }
   async findOne(id: number) {
@@ -194,7 +194,7 @@ export class UsersService {
         statusCode: 400,
         message: 'User not found',
         user: '',
-      });
+      }).getResponse();
     }
   }
 }

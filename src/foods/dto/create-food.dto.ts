@@ -89,6 +89,9 @@ export class FoodDto {
   @IsNumber()
   @ApiPropertyOptional()
   food_id: number;
+  @IsString()
+  @ApiPropertyOptional()
+  food_name: string;
   @ApiPropertyOptional()
   @IsObject()
   nutritional_contents: NutritionsDto;

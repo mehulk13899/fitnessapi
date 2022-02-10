@@ -15,12 +15,14 @@ export let mailTransporter: Transporter<SMTPTransport.SentMessageInfo> =
   });
 
 export function getEmailSubject(): string {
-  return `TheProArt Reset Password Assistance`;
+  return `Fitness App Reset Password Assistance`;
 }
 
 export function getEmailBody(mailInterface: MailInterface): string {
   return `<h2>Hello, ${mailInterface.name}</h2>
-  <p>Welcome to <strong>TheProArt</strong></p>
+  <p>Welcome to <strong>Fitness App</strong></p>
   <p>We have received your password change request. This email contains the required information needed to change your password.</p>
-  <p>change password with otp <strong>${mailInterface.otp}</strong></p>`;
+  <p>change password with otp <strong>${mailInterface.otp}</strong></p>
+  <p>Thanks & Regards,</p>
+  <p>Fitness Team</p>`;
 }

@@ -48,7 +48,7 @@ export class AuthService {
           message: 'User already exist',
           token: '',
           user: '',
-        });
+        }).getResponse();
       }
       const user = await this.userService.create(createUserInput);
       const { id } = user;
@@ -70,7 +70,7 @@ export class AuthService {
     });
     if (user) {
       if (user.status) {
-        if (loginInput?.loginfrom == 'local') {
+        if (loginInput?.loginfrom == 'email') {
           if (decrypt(user.password) == loginInput.password) {
             const { id } = user;
             const payload = { id };
@@ -87,14 +87,14 @@ export class AuthService {
               message: 'Enter Valid Password.',
               token: '',
               user: '',
-            });
+            }).getResponse();
           }
         }
         else
         { 
            return {
              statusCode: 200,
-             message: 'Login Successfully using Social Login',
+             message: 'Login Successfully',
              user,
            };
           }
@@ -104,7 +104,7 @@ export class AuthService {
           message: 'User is not active.',
           token: '',
           user: '',
-        });
+        }).getResponse();
       }
     } else {
       throw new NotFoundException({
@@ -112,7 +112,7 @@ export class AuthService {
         message: 'User Not found.',
         token: '',
         user: '',
-      });
+      }).getResponse();
     }
   }
   async changePassword(changePasswordInput: ChangePasswordDto, id: number) {
@@ -120,7 +120,7 @@ export class AuthService {
       throw new BadRequestException({
         statusCode: 400,
         message: 'Please Enter Diffrent Password',
-      });
+      }).getResponse();
     }
     if (id) {
       const user = await this.userRepository.findOne({ id });
@@ -137,13 +137,13 @@ export class AuthService {
           throw new UnauthorizedException({
             statusCode: 401,
             message: 'Enter Valid Old Password.',
-          });
+          }).getResponse();
         }
       } else {
         throw new NotFoundException({
           statusCode: 404,
           message: 'User Not found',
-        });
+        }).getResponse();
       }
     }
   }
@@ -198,7 +198,7 @@ export class AuthService {
       throw new NotFoundException({
         statusCode: 404,
         message: 'User not found',
-      });
+      }).getResponse();
     }
   }
 
@@ -227,11 +227,11 @@ export class AuthService {
       throw new NotFoundException({
         statusCode: 404,
         message: 'User not found',
-      });
+      }).getResponse();
     }
     const otp: number = this.generateOTP();
     const mailTrigger = new MailTrigger({
-      name: user.profile.name,
+      name: user?.profile?.name ? user?.profile?.name : "User" ,
       email: user.email,
       otp: otp,
     });
@@ -246,12 +246,12 @@ export class AuthService {
       throw new NotFoundException({
         statusCode: 400,
         message: 'OTP Expired',
-      });
+      }).getResponse();
     } else if (+cacheValue !== +otp) {
       throw new NotFoundException({
         statusCode: 400,
         message: "OTP doesn't match.",
-      });
+      }).getResponse();
     } else {
       if (user) {
         const passwordnew = encrypt(otpDto.password);
@@ -265,7 +265,7 @@ export class AuthService {
         throw new NotFoundException({
           statusCode: 404,
           message: 'User not found',
-        });
+        }).getResponse();
       }
     }
   }

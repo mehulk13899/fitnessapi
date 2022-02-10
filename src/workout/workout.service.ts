@@ -60,7 +60,7 @@ export class WorkoutService {
           statusCode: 404,
           message: 'workout not found',
           data: '',
-        });
+        }).getResponse();
       }
     }
     return { data: data };

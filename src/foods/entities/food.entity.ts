@@ -35,6 +35,7 @@ export class Food extends CoreEntity {
   deleted: boolean;
   description: string;
   food_id: number;
+  food_name: string;
   nutritional_contents: NutritionalContents;
   serving_sizes: number;
 }
@@ -54,6 +55,8 @@ export class FoodSchema extends CoreEntityT {
   deleted: boolean;
   @Column({ nullable: true })
   food_id: number;
+  @Column({ nullable: true })
+  food_name: string;
   @Column({ nullable: true })
   description: string;
   @Column({ nullable: true })
