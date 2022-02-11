@@ -12,7 +12,7 @@ export class FoodsService {
   constructor(
     @InjectRepository(FoodSchema)
     private foodRepository: Repository<FoodSchema>,
-  ) {}
+  ) { }
   nutritionalSchemaRepositry = getRepository(NutritionalSchema);
   userRepositry = getRepository(UserT);
 
@@ -39,7 +39,12 @@ export class FoodsService {
       await this.createfood(foodItem, user, 'dinner');
     });
 
-    return await this.userRepositry.findOne(id);
+    const finalfood = await this.userRepositry.findOne(id);
+    return {
+      "message": "Food add Successfully",
+      "status": 200,
+      finalfood
+    };
   }
 
   async createfood(foodItem: Food, user: UserT, type: string) {
@@ -50,7 +55,7 @@ export class FoodsService {
     food.serving_sizes = foodItem?.serving_sizes;
     food.type = type;
     food.food_id = foodItem?.food_id;
-    food.food_name= foodItem?.food_name;
+    food.food_name = foodItem?.food_name;
 
     await this.foodRepository.save(food);
     await this.foodRepository.update({ id: food.id }, { user: user });
@@ -61,6 +66,7 @@ export class FoodsService {
         food: food,
       });
     }
+
   }
   findAll() {
     return `This action returns all foods`;
@@ -88,7 +94,11 @@ export class FoodsService {
     result.snacks = await this.foodRepository.find({
       where: { type: 'snacks', created_at: LessThan(dated), user: userd },
     });
-    return result;
+    return {
+      "message": "Food get Successfully",
+      "status": 200,
+      result
+    };
   }
 
   update(id: number, updateFoodDto: UpdateFoodDto) {

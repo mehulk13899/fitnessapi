@@ -26,6 +26,7 @@ export class UsersService {
     user.password = createUserDto.password;
     user.status = true;
     user.interested_in = createUserDto.interested_in;
+    user.loginfrom = createUserDto?.loginfrom;
     await this.userRepository.save(user).catch((err) => {
       console.log(err);
       return err;

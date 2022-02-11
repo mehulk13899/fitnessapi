@@ -72,12 +72,14 @@ export class AuthService {
       email: loginInput.email,
     });
     if (user) {
+
+      const { id } = user;
+      const payload = { id };
+      const asscesstoken = this.jwtService.sign({ payload });
+
       if (user.status) {
         if (loginInput?.loginfrom == 'email') {
           if (decrypt(user.password) == loginInput.password) {
-            const { id } = user;
-            const payload = { id };
-            const asscesstoken = this.jwtService.sign({ payload });
             return {
               statusCode: 200,
               message: 'Login Successfully',
@@ -98,6 +100,7 @@ export class AuthService {
            return {
              statusCode: 200,
              message: 'Login Successfully',
+             token: asscesstoken,
              user,
            };
           }
