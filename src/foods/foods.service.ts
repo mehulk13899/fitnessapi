@@ -50,6 +50,7 @@ export class FoodsService {
     food.serving_sizes = foodItem?.serving_sizes;
     food.type = type;
     food.food_id = foodItem?.food_id;
+    food.food_name= foodItem?.food_name;
 
     await this.foodRepository.save(food);
     await this.foodRepository.update({ id: food.id }, { user: user });
