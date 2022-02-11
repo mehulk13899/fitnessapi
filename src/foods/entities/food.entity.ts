@@ -53,13 +53,13 @@ export class FoodSchema extends CoreEntityT {
   country_code: string;
   @Column({ nullable: true })
   deleted: boolean;
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   food_id: number;
   @Column({ nullable: true })
   food_name: string;
   @Column({ nullable: true })
   description: string;
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   serving_sizes: number;
 
   @Column({ nullable: true })

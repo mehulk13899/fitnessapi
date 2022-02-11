@@ -124,7 +124,7 @@ export class WorkoutSchema extends CoreEntityT {
   uuid: string;
 
 
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   exercise_base: number;
 
   @Column({ nullable: true })
@@ -143,10 +143,10 @@ export class WorkoutSchema extends CoreEntityT {
   @Column({ nullable: true })
   muscles_secondary: string;
 
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   language: number;
 
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   license: number;
 
   @Column({ nullable: true })

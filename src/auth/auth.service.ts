@@ -65,6 +65,9 @@ export class AuthService {
     }
   }
   async login(loginInput: LoginDto) {
+    if (loginInput?.loginfrom == undefined) {
+      throw new BadRequestException("Please provide login from").getResponse();
+    }
     const user = await this.userRepository.findOne({
       email: loginInput.email,
     });

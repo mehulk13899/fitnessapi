@@ -5,7 +5,7 @@ export class RegisterDto extends CreateUserDto {}
 export class LoginDto {
   email: string;
   password?: string;
-  loginfrom?: string;
+  loginfrom: string;
 }
 
 export class ChangePasswordDto {

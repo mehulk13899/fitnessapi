@@ -4,42 +4,42 @@ import { FoodSchema } from './food.entity';
 
 @Entity('nutritions')
 export class NutritionalSchema extends CoreEntityT {
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   calcium: number;
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   carbohydrates: number;
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   cholesterol: number;
   @Column('simple-json', { nullable: true })
   energy: {
     unit: string;
     value: number;
   };
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   fat: number;
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   fiber: number;
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   iron: number;
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   monounsaturated_fat: number;
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   polyunsaturated_fat: number;
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   potassium: number;
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   protein: number;
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   saturated_fat: number;
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   sodium: number;
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   sugar: number;
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   trans_fat: number;
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   vitamin_a: number;
-  @Column({ nullable: true })
+  @Column({ type: "float8", nullable: true })
   vitamin_c: number;
 
   @OneToOne(() => FoodSchema, (ft: FoodSchema) => ft.nutritional_contents, {
